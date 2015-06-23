@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
+        <file>Runner.qml</file>
+        <file>Property.qml</file>
+        <file>AddAction.qml</file>
+        <file>Base64Property.qml</file>
+        <file>Password32Property.qml</file>
     </qresource>
 </RCC>
