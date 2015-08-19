@@ -7,5 +7,6 @@
         <file>AddAction.qml</file>
         <file>Base64Property.qml</file>
         <file>Password32Property.qml</file>
+        <file>CommandProperty.qml</file>
     </qresource>
 </RCC>

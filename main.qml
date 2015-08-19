@@ -21,6 +21,7 @@ ApplicationWindow {
 
         fileData+="<from>"+main.from+"</from>\r\n"
         fileData+="<to>"+main.to+"</to>\r\n"
+        fileData+="<filterFile>"+main.filterFile+"</filterFile>\r\n";
 
         var actionList= main.actionList;
         for(var i=0;i<actionList.count;i++)
@@ -50,6 +51,16 @@ ApplicationWindow {
                     fileData+="<password>"+action.password+"</password>\r\n";
                 }
 
+                if(action.startPos)
+                {
+                    fileData+="<startPos>"+action.startPos+"</startPos>\r\n";
+                }
+
+                if(action.density)
+                {
+                    fileData+="<density>"+action.density+"</density>\r\n";
+                }
+
                 if(action.file)
                 {
                     fileData+="<file>"+action.file+"</file>\r\n";
@@ -58,6 +69,18 @@ ApplicationWindow {
                 break;
             case "zipe":
             case "zipd":
+
+                break;
+            case "command":
+                if(action.command)
+                {
+                    fileData+="<command>"+action.command+"</command>\r\n";
+                }
+                if(action.filterFile)
+                {
+                    fileData+="<filterFile>"+action.filterFile+"</filterFile>\r\n";
+
+                }
 
                 break;
             }
@@ -83,7 +106,10 @@ ApplicationWindow {
         XmlRole { name: "alphabet"; query: "alphabet/string()" }
         XmlRole { name: "password"; query: "password/string()" }
         XmlRole { name: "file"; query: "file/string()" }
-
+        XmlRole { name: "startPos"; query: "startPos/string()" }
+        XmlRole { name: "density"; query: "density/string()" }
+        XmlRole { name: "command"; query: "command/string()" }
+        XmlRole { name: "filterFile"; query: "filterFile/string()" }
 
         onStatusChanged: {
             var actionList= main.actionList;
@@ -105,6 +131,7 @@ ApplicationWindow {
 
         XmlRole { name: "from"; query: "from/string()" }
         XmlRole { name: "to"; query: "to/string()" }
+        XmlRole { name: "filterFile"; query: "filterFile/string()" }
 
         onStatusChanged: {
 
@@ -112,6 +139,7 @@ ApplicationWindow {
                 return;
 
             main.setFromTo(fromToModel.get(0).from,fromToModel.get(0).to);
+            main.setFilterFile(fromToModel.get(0).filterFile);
         }
 
     }
@@ -128,11 +156,30 @@ ApplicationWindow {
     }
 
 
-    function run(from,to,list)
+    function run(from,to,filterFile,list)
     {
 
+        //第0步 删除所有文件
+        fs.deleteFile(to);
+
         //第一步 复制文件
+
         var fileList= fs.getFileList(from,"");
+
+        //对文件列表进行过滤
+        var filterList= filterFile.split("\n");
+        console.log(filterList.length);
+        for(var i=0;i<filterList.length;i++){
+            var reg=new RegExp(filterList[i]);
+            for(var j=0;j<fileList.length;j++)
+            {
+                if(reg.test(fileList[j]))
+                {
+                   fileList.splice(j,1,0);
+                   j--;
+                }
+            }
+        }
         console.log(fileList.length)
         for(var k=0;k<fileList.length;k++)
         {
@@ -168,7 +215,30 @@ ApplicationWindow {
                     break;
                 case "p32e":
                 case "p32d":
-                    fs.p32(path,action.password,action.file);
+                    fs.p32(path,action.password,action.file,action.startPos,action.density);
+                    break;
+                case "command":
+
+                    var isRun=true;
+
+                    if(action.filterFile!=""&&action.filterFile!=null){
+                        var fList=action.filterFile.split("\n");
+                        for(var f=0;f<=filterList.length;f++)
+                        {
+                            var regEx=new RegExp(fList[f]);
+                            if(regEx.test(path))
+                            {
+                                isRun=false;
+                                break;
+                            }
+                        }
+                    }
+                    path=path.substr(7,path.length-7);
+                    if(isRun){
+                        var command=action.command.replace(/\$path/g,path);
+                        fs.system(command);
+                    }
+
                     break;
                 }
 
@@ -187,8 +257,8 @@ ApplicationWindow {
     }
 
     title: qsTr("Safety Data Factory")
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     visible: true
 
     menuBar: MenuBar {
@@ -231,10 +301,12 @@ ApplicationWindow {
 
     MainForm {
         id:main
+        width: 800
+        height: 600
         anchors.fill: parent
 
         onRunClickd: {
-            run(main.from,main.to,main.actionList);
+            run(main.from,main.to,main.filterFile,main.actionList);
         }
     }
 

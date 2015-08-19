@@ -3,8 +3,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 Item {
-    width: 640
-    height: 480
+    width: 800
+    height: 600
 
     //property alias button2: button2
     //property alias button1: button1
@@ -15,12 +15,17 @@ Item {
     property string from:runner.from
     property string to:runner.to
 
+    property string filterFile:runner.filterFile
 
     function setFromTo(from,to)
     {
          runner.setFromTo(from,to);
     }
 
+    function setFilterFile(filter)
+    {
+         runner.setFilterFile(filter);
+    }
     RowLayout {
         anchors.centerIn: parent
 
@@ -51,7 +56,7 @@ Item {
     signal runClickd();
     GroupBox {
         id: groupBox2
-        height: 122
+        height: 180
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.right: parent.right

@@ -96,6 +96,10 @@ Item {
             case "zipd":
                 propertyBox.source="";
                 break;
+            case "command":
+                propertyBox.source="CommandProperty.qml";
+                propertyBox.item.actionData=action;
+                break;
             }
         }
     }
@@ -224,14 +228,14 @@ Item {
             id: propertyBox
             y: 10
             width: 310
-            height: 233
+            height: 280
         }
 
         TextArea {
             id: log
             x: 0
             width: 310
-            height: 135
+            height: 100
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
             transformOrigin: Item.Center

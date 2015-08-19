@@ -87,10 +87,76 @@ Rectangle {
         anchors.leftMargin: 10
     }
 
+    RowLayout {
+        id: rowLayout3
+        x: 8
+        y: 111
+        height: 44
+        anchors.right: parent.right
+        Label {
+            id: label3
+            text: qsTr("Start position")
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+        }
 
+        SpinBox {
+            id: startPos
+            anchors.left: parent.left
+            anchors.leftMargin: 100
+            minimumValue: -9999999
+            maximumValue: 9999999
+            value:actionData.startPos==null?0:actionData.startPos
+            onValueChanged: actionData.startPos=startPos.value
+        }
+
+        Label {
+            id: label4
+            text: qsTr("100,-100,default 0")
+            anchors.top: parent.top
+            anchors.topMargin: 14
+            anchors.right: rectangle1.left
+            anchors.rightMargin: -477
+            anchors.left: startPos.right
+            anchors.leftMargin: 10
+        }
+
+
+        anchors.rightMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+    }
 
     RowLayout {
-        y: 116
+        id: rowLayout4
+        x: 8
+        y: 161
+        height: 44
+        anchors.right: parent.right
+        Label {
+            id: label5
+            text: qsTr("Density")
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+        }
+
+        SpinBox {
+            id: densityValue
+            anchors.left: parent.left
+            anchors.leftMargin: 60
+            minimumValue: 1
+            maximumValue: 9999999
+            value:actionData.density==null?1:actionData.density
+            onValueChanged: actionData.density=densityValue.value
+        }
+
+
+        anchors.rightMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+    }
+    RowLayout {
+        y: 216
         height: 44
         anchors.left: parent.left
         anchors.leftMargin: 10

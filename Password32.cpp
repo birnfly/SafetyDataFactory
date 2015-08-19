@@ -10,7 +10,7 @@ Password32::~Password32(void)
 {
 }
 
-char * Password32::exe(char* object,unsigned int objectLength,char* result, char* password,unsigned int startIndex)
+char * Password32::exe(char* object,unsigned int objectLength,char* result, char* password,unsigned int startIndex,int density)
 {
     unsigned int i;
     char b;
@@ -24,7 +24,7 @@ char * Password32::exe(char* object,unsigned int objectLength,char* result, char
 
     //开始加密或解密
 
-    for(i=0;i<objectLength;i++)
+    for(i=0;i<objectLength;i+=density)
     {
         //获取要加密的字节
         b=object[i];

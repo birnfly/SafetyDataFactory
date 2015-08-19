@@ -6,7 +6,7 @@ import QtQuick.Dialogs 1.2
 Item{
     id: item1
     width: 550
-    height: 100
+    height: 150
     antialiasing: false
 
     TextField {
@@ -129,6 +129,25 @@ Item{
         }
     }
 
+    Text {
+        id: text3
+        x: 3
+        y: 109
+        text: qsTr("Filter File")
+        font.pixelSize: 12
+    }
+
+    TextArea {
+        id: filterFileStr
+        height: 38
+        anchors.left: parent.left
+        anchors.leftMargin: 60
+        anchors.top: parent.top
+        anchors.topMargin: 97
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+    }
+
 
     property string from: fromPath.text
     property string to:toPath.text
@@ -137,5 +156,12 @@ Item{
         fromPath.text=from;
         toPath.text=to;
     }
+
+    property string filterFile:filterFileStr.text
+
+    function setFilterFile(filter){
+        filterFileStr.text=filter;
+    }
+
 }
 

@@ -48,6 +48,8 @@ Item {
                 ListElement { text: "Password32 Decode"; value: "p32d" }
                 ListElement { text: "Zip Encode"; value: "zipe" }
                 ListElement { text: "Zip Decode"; value: "zipd" }
+                ListElement { text: "Command"; value: "command" }
+
             }
     }
 

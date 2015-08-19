@@ -6,6 +6,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QIODevice>
 #include <QtCore/QVector>
+#include <QtCore/QProcess>
 
 #include "Base64.h"
 #include "Password32.h"
@@ -182,7 +183,7 @@ void FileStream::b64d(QString path,QString alphabet)
     delete[] buf;
 }
 
-void FileStream::p32(QString path,QString password,QString filePassword)
+void FileStream::p32(QString path,QString password,QString filePassword,int startPos,int density)
 {
     path=QUrl(path).toLocalFile();
 
@@ -209,8 +210,23 @@ void FileStream::p32(QString path,QString password,QString filePassword)
         file.clear();
     }
 
+
+    int newSize=size;
+    char* newBuf=buf;
+    if(startPos>0){
+        if(size>startPos){
+            newSize=size-startPos;
+            newBuf=newBuf+startPos;
+        }
+    }else if(startPos<0){
+        if(size>-startPos){
+            newSize=-startPos;
+            newBuf=newBuf+(size+startPos);
+        }
+    }
+
     Password32 pwd32;
-    pwd32.exe(buf,size,buf,(char *)pwd);
+    pwd32.exe(newBuf,newSize,newBuf,(char *)pwd,0,density);
 
     file.open(path.toStdString().c_str(),std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);
     file.seekg(0,std::ios::beg);
@@ -218,4 +234,27 @@ void FileStream::p32(QString path,QString password,QString filePassword)
     file.close();
 
     delete[] buf;
+}
+
+void FileStream::deleteFile(QString path)
+{
+    path=QUrl(path).toLocalFile();
+
+    QProcess p(0);
+    p.start("rm -rf "+path);
+    p.waitForStarted();
+    p.waitForFinished();
+
+}
+
+void FileStream::system(QString command)
+{
+    std::string cmd=((const char*) command.toLocal8Bit());
+
+    const char* c=cmd.c_str();
+    QProcess p(0);
+    p.start(c);
+    p.waitForStarted();
+    p.waitForFinished();
+
 }
